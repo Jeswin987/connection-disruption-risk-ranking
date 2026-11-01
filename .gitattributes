@@ -1,0 +1,3 @@
+# Check out text files with LF on every platform, so MANIFEST.csv
+# checksums and byte-level comparisons hold on a fresh Windows clone.
+* text=auto eol=lf
