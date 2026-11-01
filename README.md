@@ -241,6 +241,7 @@ The quick final check reads the committed selection in `model_selection_outputs/
 ├── .gitattributes             # Keeps LF line endings so checksums hold on Windows clones
 ├── MANIFEST.csv               # Checksums for the original v0.3 export only; not updated for later files
 ├── MANIFEST.json
+├── CLAUDE.md                  # Working rules for Claude Code sessions
 └── README.md
 ```
 
