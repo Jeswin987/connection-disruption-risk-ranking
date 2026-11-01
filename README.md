@@ -303,7 +303,3 @@ python -m pip check
 ```
 
 A successful dependency check verifies package consistency in that environment; it does not establish historical pipeline reproducibility. `requirements.txt` does not pin a Python version. The pinned packages were also installed into a fresh virtual environment on Python 3.13.16 on 2026-10-15, where `pip check` reported no broken requirements.
-
-## Licence
-
-Released under the MIT licence. See the [LICENSE](LICENSE) file.
