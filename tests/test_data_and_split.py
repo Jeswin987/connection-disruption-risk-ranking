@@ -16,7 +16,7 @@ def test_rows_per_event_between_5_and_15(passengers):
 
 
 def test_target_is_missed_and_not_recovered_same_day(passengers):
-    # Rule from reproduce_followup_v03.py:44.
+    # Rule from the `chk = ((P.original_connection_missed == 1) & ...` line in reproduce_followup_v03.py.
     expected = (
         (passengers.original_connection_missed == 1)
         & (passengers.same_day_recovery_available == 0)
@@ -25,7 +25,8 @@ def test_target_is_missed_and_not_recovered_same_day(passengers):
 
 
 def test_saved_test_split_is_reproduced(passengers, test_event_ids):
-    # Split procedure from reproduce_followup_v03.py:40-41.
+    # Split procedure from the `train_test_split(ev, test_size=0.25, random_state=42)`
+    # call in reproduce_followup_v03.py.
     events = passengers[GROUP_COL].drop_duplicates()
     _, rebuilt_test = train_test_split(events, test_size=0.25, random_state=42)
     assert set(rebuilt_test) == set(test_event_ids)

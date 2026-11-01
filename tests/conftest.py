@@ -34,11 +34,11 @@ def train_event_ids() -> pd.Series:
 
 @pytest.fixture(scope="session")
 def test_rows(passengers, test_event_ids) -> pd.DataFrame:
-    # Same row selection as reproduce_followup_v03.py:47.
+    # Same row selection as `te = P[P.event_id.isin(test_ids)]` in reproduce_followup_v03.py.
     return passengers[passengers.event_id.isin(set(test_event_ids))].reset_index(drop=True)
 
 
 @pytest.fixture(scope="session")
 def train_rows(passengers, test_event_ids) -> pd.DataFrame:
-    # Same row selection as reproduce_followup_v03.py:46.
+    # Same row selection as `tr = P[~P.event_id.isin(test_ids)]` in reproduce_followup_v03.py.
     return passengers[~passengers.event_id.isin(set(test_event_ids))].reset_index(drop=True)

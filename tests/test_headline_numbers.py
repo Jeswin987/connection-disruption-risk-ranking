@@ -16,12 +16,13 @@ FINAL_METRICS_CSV = ROOT / "final_check_outputs" / "test_metrics.csv"
 
 
 def floor_capacity(n, capacity):
-    # Floor rule from reproduce_followup_v03.py:70.
+    # Floor rule from `int(np.floor(n * cap))` in point_capture() in reproduce_followup_v03.py.
     return int(np.floor(n * capacity))
 
 
 def point_capture(y, scores, capacity):
-    # Ranking and capture from reproduce_followup_v03.py:67 and 69-71
+    # Ranking and capture from `np.argsort(-v, kind="mergesort")` and point_capture()
+    # in reproduce_followup_v03.py
     # (descending score, stable mergesort, top floor(n * capacity)).
     order = np.argsort(-scores, kind="mergesort")
     return int(y[order[:floor_capacity(len(y), capacity)]].sum())
@@ -29,7 +30,8 @@ def point_capture(y, scores, capacity):
 
 @pytest.fixture(scope="module")
 def saved_hgb_scores(test_rows):
-    # Join of the saved queue's risk_score, from reproduce_followup_v03.py:56-58.
+    # Join of the saved queue's risk_score, from the `q[["passenger_id", "risk_score"]]`
+    # merge in reproduce_followup_v03.py.
     queue = pd.read_csv(QUEUE_CSV)
     scores = test_rows[["passenger_id"]].merge(
         queue[["passenger_id", "risk_score"]], on="passenger_id", how="left"
@@ -53,7 +55,7 @@ def test_saved_hgb_queue_roc_auc(test_rows, saved_hgb_scores):
 
 
 def test_simple_rule_baseline_capture(test_rows):
-    # Reconstructed rule from reproduce_followup_v03.py:60.
+    # Reconstructed rule from `rule = (te.forecast_delay_minutes + ...` in reproduce_followup_v03.py.
     rule = (
         test_rows.forecast_delay_minutes
         + test_rows.expected_transfer_minutes
