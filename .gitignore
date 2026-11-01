@@ -32,3 +32,6 @@ cleanup_inventory.csv
 
 model_selection_outputs_quick/
 final_check_outputs_quick/
+
+# Output folders from the README's rerun commands
+/rerun_*/
