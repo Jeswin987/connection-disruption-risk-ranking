@@ -211,6 +211,8 @@ The quick final check reads the committed selection in `model_selection_outputs/
 
 **Environment.** The committed model-comparison runs record Python 3.13.7, NumPy 2.5.2, pandas 3.0.5 and scikit-learn 1.9.0 in their config files ([`run_config.json`](model_selection_outputs/run_config.json), [`final_check_config.json`](final_check_outputs/final_check_config.json)), matching the pins in `requirements.txt`. Under those pins, refitting HGB with seed 0 reproduces the committed seed-0 row of `hgb_seed_spread.csv` exactly; `tests/test_hgb_seed0_refit.py` checks this and is the only test that fits a model. Anything that refits HGB can vary with library version. `requirements.txt` also lists SciPy: `model_selection_v03.py` imports it directly, and `final_check_v03.py` uses it only indirectly.
 
+**Fresh-clone check.** On 2026-11-01, on Windows 11 Home Single Language (version 10.0.26300.9818) in Git Bash with Python 3.13.7, every command in this section ran as written from a fresh clone: all tests passed, and the follow-up reruns matched all eight committed follow-up tables. The two full model-comparison commands were not rerun; their `--quick` versions were.
+
 ## Repository map
 
 ```text
