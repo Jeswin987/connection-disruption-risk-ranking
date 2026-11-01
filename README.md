@@ -159,11 +159,12 @@ HGB needed about 9 times less total cross-validation fitting time than the MLP (
 
 ## Reproduce
 
-Use Python 3.13 (my runs used 3.13.7). From a terminal:
+Use Python 3.13 (my runs used 3.13.7). The commands below are for a bash shell (Git Bash on Windows; Linux/macOS):
 
 ```bash
 git clone https://github.com/Jeswin987/connection-disruption-risk-ranking.git
 cd connection-disruption-risk-ranking
+python --version                   # should report Python 3.13.x
 python -m venv .venv
 source .venv/Scripts/activate      # Git Bash on Windows
 # source .venv/bin/activate        # Linux/macOS
@@ -171,7 +172,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The tests take well under a minute and fit only one model (the HGB seed-0 refit described under Environment below). They check the dataset counts and target rule, that the saved event split is reproduced, the headline numbers (recomputed from the saved files where possible), the `MANIFEST.csv` checksums, the README links, and the follow-up scripts' output-folder guard.
+The tests take about a minute on a cold first run and around 30 seconds after that. They fit only one model (the HGB seed-0 refit described under Environment below). They check the dataset counts and target rule, that the saved event split is reproduced, the headline numbers (recomputed from the saved files where possible), the `MANIFEST.csv` checksums, the README links, and the follow-up scripts' output-folder guard.
 
 Rerun the follow-up analyses into a new folder (`out_dir` is required and may not be the committed `followup_outputs/`):
 
@@ -182,7 +183,13 @@ python shuffle_check_v03.py . rerun_outputs
 python check_connection_miss_rule.py .
 ```
 
-`check_connection_miss_rule.py` takes only the package folder and prints its results.
+These four took about a minute in total on my machine. `check_connection_miss_rule.py` takes only the package folder and prints its results. To check that the rerun reproduces the committed tables:
+
+```bash
+git diff --no-index --ignore-cr-at-eol --exit-code followup_outputs rerun_outputs
+```
+
+Exit code 0 with no diff lines means all eight tables match. On Windows the rerun CSVs use CRLF line endings, which this ignores; git may still print one "CRLF will be replaced by LF" warning per file, which does not indicate a difference.
 
 Rerun the model comparison (about 4.4 hours of fitting) and the final check (about 45 minutes of tuning) on my Windows machine:
 
@@ -191,7 +198,16 @@ python model_selection_v03.py . --out-dir rerun_model_selection
 python final_check_v03.py . --selection-dir rerun_model_selection --out-dir rerun_final_check
 ```
 
-Always use a new `--out-dir`. In the committed folder, `model_selection_v03.py` refuses to run if the recorded settings or library versions differ; otherwise it skips the fits but rewrites the summary files. `--quick` runs a small smoke test whose results are not meaningful.
+Always use a new `--out-dir`. In the committed folder, `model_selection_v03.py` refuses to run if the recorded settings or library versions differ; otherwise it skips the fits but rewrites the summary files.
+
+For a quick smoke test of both scripts (each took under a minute on my machine; the results are not meaningful):
+
+```bash
+python model_selection_v03.py . --quick --out-dir rerun_quick_selection
+python final_check_v03.py . --quick --selection-dir model_selection_outputs --out-dir rerun_quick_check
+```
+
+The quick final check reads the committed selection in `model_selection_outputs/` because `final_check_v03.py` is designed for the MLP-against-HGB comparison that the full selection produced; it stops if the selection's winner is anything else, which a quick selection may pick. It only reads the committed selection, and in quick mode it scores held-out training events, not the test events.
 
 **Environment.** The committed model-comparison runs record Python 3.13.7, NumPy 2.5.2, pandas 3.0.5 and scikit-learn 1.9.0 in their config files ([`run_config.json`](model_selection_outputs/run_config.json), [`final_check_config.json`](final_check_outputs/final_check_config.json)), matching the pins in `requirements.txt`. Under those pins, refitting HGB with seed 0 reproduces the committed seed-0 row of `hgb_seed_spread.csv` exactly; `tests/test_hgb_seed0_refit.py` checks this and is the only test that fits a model. Anything that refits HGB can vary with library version. `requirements.txt` also lists SciPy: `model_selection_v03.py` imports it directly, and `final_check_v03.py` uses it only indirectly.
 
