@@ -172,7 +172,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The tests take about a minute on a cold first run and around 30 seconds after that. They fit only one model (the HGB seed-0 refit described under Environment below). They check the dataset counts and target rule, that the saved event split is reproduced, the headline numbers (recomputed from the saved files where possible), the `MANIFEST.csv` checksums, the README links, and the follow-up scripts' output-folder guard.
+The tests take about a minute on a first run (57–69 s in two fresh clones) and are usually faster afterwards. They fit only one model (the HGB seed-0 refit described under Environment below). They check the dataset counts and target rule, that the saved event split is reproduced, the headline numbers (recomputed from the saved files where possible), the `MANIFEST.csv` checksums, the README links, and the follow-up scripts' output-folder guard.
 
 Rerun the follow-up analyses into a new folder (`out_dir` is required and may not be the committed `followup_outputs/`):
 
@@ -183,7 +183,7 @@ python shuffle_check_v03.py . rerun_outputs
 python check_connection_miss_rule.py .
 ```
 
-These four took about a minute in total on my machine. `check_connection_miss_rule.py` takes only the package folder and prints its results. To check that the rerun reproduces the committed tables:
+These four took about 1 to 2.5 minutes in total on my machine. `check_connection_miss_rule.py` takes only the package folder and prints its results. To check that the rerun reproduces the committed tables:
 
 ```bash
 git diff --no-index --ignore-cr-at-eol --exit-code followup_outputs rerun_outputs
@@ -200,7 +200,7 @@ python final_check_v03.py . --selection-dir rerun_model_selection --out-dir reru
 
 Always use a new `--out-dir`. In the committed folder, `model_selection_v03.py` refuses to run if the recorded settings or library versions differ; otherwise it skips the fits but rewrites the summary files.
 
-For a quick smoke test of both scripts (each took under a minute on my machine; the results are not meaningful):
+For a quick smoke test of both scripts (each took under about 2 minutes on my machine; the results are not meaningful):
 
 ```bash
 python model_selection_v03.py . --quick --out-dir rerun_quick_selection
@@ -211,7 +211,7 @@ The quick final check reads the committed selection in `model_selection_outputs/
 
 **Environment.** The committed model-comparison runs record Python 3.13.7, NumPy 2.5.2, pandas 3.0.5 and scikit-learn 1.9.0 in their config files ([`run_config.json`](model_selection_outputs/run_config.json), [`final_check_config.json`](final_check_outputs/final_check_config.json)), matching the pins in `requirements.txt`. Under those pins, refitting HGB with seed 0 reproduces the committed seed-0 row of `hgb_seed_spread.csv` exactly; `tests/test_hgb_seed0_refit.py` checks this and is the only test that fits a model. Anything that refits HGB can vary with library version. `requirements.txt` also lists SciPy: `model_selection_v03.py` imports it directly, and `final_check_v03.py` uses it only indirectly.
 
-**Fresh-clone check.** On 2026-11-01, on Windows 11 Home Single Language (version 10.0.26300.9818) in Git Bash with Python 3.13.7, every command in this section ran as written from a fresh clone: all tests passed, and the follow-up reruns matched all eight committed follow-up tables. The two full model-comparison commands were not rerun; their `--quick` versions were.
+**Fresh-clone check.** On 2026-11-01, on Windows 11 (build 26300) in Git Bash with Python 3.13.7, every command in this section ran as written from a fresh clone: all tests passed, and the follow-up reruns matched all eight committed follow-up tables. The two full model-comparison commands were not rerun; their `--quick` versions were.
 
 ## Repository map
 
