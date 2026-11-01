@@ -10,7 +10,7 @@ import pytest
 
 from conftest import ROOT
 
-SCRIPTS = ["reproduce_followup_v03.py", "sensitivity_alt_target_v03.py", "Shuffle_check_v03.py"]
+SCRIPTS = ["reproduce_followup_v03.py", "sensitivity_alt_target_v03.py", "shuffle_check_v03.py"]
 MISSING_MSG = "out_dir is required"
 PROTECTED_MSG = "refusing to write to the committed followup_outputs/ folder"
 

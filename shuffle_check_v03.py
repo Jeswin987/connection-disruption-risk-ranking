@@ -6,7 +6,7 @@ then scores the held-out test events. With no leakage the test ROC-AUC should ce
 Individual runs vary a lot (about +/-0.05) because test passengers cluster in only 2,500 events,
 so report the mean and standard error, not a single run.
 
-Run from the unzipped package folder:
+Run from the repository root:
     python shuffle_check_v03.py package_dir out_dir   (out_dir required; must not be followup_outputs/)
 """
 import sys, os, warnings
@@ -17,7 +17,7 @@ from sklearn.metrics import roc_auc_score
 warnings.filterwarnings("ignore")
 PKG = sys.argv[1] if len(sys.argv) > 1 else "."
 if len(sys.argv) < 3:
-    sys.exit("error: out_dir is required.\nusage: python Shuffle_check_v03.py package_dir out_dir")
+    sys.exit("error: out_dir is required.\nusage: python shuffle_check_v03.py package_dir out_dir")
 OUT = sys.argv[2]
 _protected = {os.path.normcase(os.path.realpath(os.path.join(d, "followup_outputs")))
               for d in (os.path.dirname(os.path.abspath(__file__)), PKG)}

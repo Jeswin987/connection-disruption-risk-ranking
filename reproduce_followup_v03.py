@@ -1,14 +1,15 @@
 """
 Reproducible follow-up analysis for the BA disruption v0.3 prototype.
 
-Run from the root of the unzipped reproducibility package:
-    pip install numpy pandas scikit-learn scipy
+Run from the repository root:
+    python -m pip install -r requirements.txt
     python reproduce_followup_v03.py package_dir out_dir
 
 Writes CSVs to out_dir (required; must not be the committed followup_outputs/). Everything here is computed
 from the saved artifacts; nothing is copied from earlier chat transcripts.
-Environment used for the checked run: Python 3.13, numpy 2.3, pandas 2.2,
-scikit-learn 1.8.
+The committed followup_outputs/ tables match the requirements.txt pins (NumPy 2.5.2,
+pandas 3.0.5, scikit-learn 1.9.0) on Python 3.13.7; this was checked by recomputing
+HGB seed 0. Anything that refits HGB can vary with library version.
 """
 import sys, os, warnings
 import numpy as np, pandas as pd

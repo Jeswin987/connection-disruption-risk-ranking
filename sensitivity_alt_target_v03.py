@@ -9,7 +9,7 @@ and the recovery arrival delay is best_recovery_arrival_minutes.
 Alternative target (no midnight cliff):
     severe_alt = missed AND (no recovery itinerary OR recovery delay > 180 minutes)
 
-Run from the unzipped package folder:
+Run from the repository root:
     python sensitivity_alt_target_v03.py package_dir out_dir   (out_dir required; must not be followup_outputs/)
 """
 import sys, os, warnings
