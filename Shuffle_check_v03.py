@@ -7,7 +7,7 @@ Individual runs vary a lot (about +/-0.05) because test passengers cluster in on
 so report the mean and standard error, not a single run.
 
 Run from the unzipped package folder:
-    python shuffle_check_v03.py [package_dir] [out_dir]
+    python shuffle_check_v03.py package_dir out_dir   (out_dir required; must not be followup_outputs/)
 """
 import sys, os, warnings
 import numpy as np, pandas as pd
@@ -16,7 +16,13 @@ from sklearn.metrics import roc_auc_score
 
 warnings.filterwarnings("ignore")
 PKG = sys.argv[1] if len(sys.argv) > 1 else "."
-OUT = sys.argv[2] if len(sys.argv) > 2 else "followup_outputs"
+if len(sys.argv) < 3:
+    sys.exit("error: out_dir is required.\nusage: python Shuffle_check_v03.py package_dir out_dir")
+OUT = sys.argv[2]
+_protected = {os.path.normcase(os.path.realpath(os.path.join(d, "followup_outputs")))
+              for d in (os.path.dirname(os.path.abspath(__file__)), PKG)}
+if os.path.normcase(os.path.realpath(OUT)) in _protected:
+    sys.exit("error: refusing to write to the committed followup_outputs/ folder; choose another out_dir.")
 os.makedirs(OUT, exist_ok=True)
 N_SHUFFLES = 40
 FEATURES = ["weather_severity", "atc_restriction", "airport_congestion", "inbound_operational_pressure",

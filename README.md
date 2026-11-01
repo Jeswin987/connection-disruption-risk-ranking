@@ -229,7 +229,7 @@ python Shuffle_check_v03.py . rerun_outputs
 python check_connection_miss_rule.py .
 ```
 
-The first three scripts accept `[package_dir] [out_dir]` arguments; `check_connection_miss_rule.py` accepts only `[package_dir]` and prints its results. All four are follow-up analysis code, not recovered original v0.3 generator or training scripts. The shuffle-check filename is case-sensitive on some systems; use `Shuffle_check_v03.py` exactly as it appears in the repository. The model-comparison scripts are separate; see [Model comparison](#model-comparison).
+The first three scripts take `package_dir out_dir` arguments, where `out_dir` is required and may not be the committed `followup_outputs/` folder; `check_connection_miss_rule.py` accepts only `[package_dir]` and prints its results. All four are follow-up analysis code, not recovered original v0.3 generator or training scripts. The shuffle-check filename is case-sensitive on some systems; use `Shuffle_check_v03.py` exactly as it appears in the repository. The model-comparison scripts are separate; see [Model comparison](#model-comparison).
 
 Verified behaviour: on 2026-10-15, on Linux with Python 3.13.16 and the pinned `requirements.txt` versions (installed into a fresh virtual environment), the four commands above, run exactly as written, all exited successfully. The three analysis scripts reproduced all eight tables in `followup_outputs/` exactly, `python -m pip check` reported no broken requirements, and the connection-miss check printed 316 / 0.3158. Reproducing the follow-up analyses is not the same as reproducing the original experiment.
 

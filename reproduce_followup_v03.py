@@ -3,9 +3,9 @@ Reproducible follow-up analysis for the BA disruption v0.3 prototype.
 
 Run from the root of the unzipped reproducibility package:
     pip install numpy pandas scikit-learn scipy
-    python reproduce_followup_v03.py [package_dir] [out_dir]
+    python reproduce_followup_v03.py package_dir out_dir
 
-Writes CSVs to out_dir (default ./followup_outputs). Everything here is computed
+Writes CSVs to out_dir (required; must not be the committed followup_outputs/). Everything here is computed
 from the saved artifacts; nothing is copied from earlier chat transcripts.
 Environment used for the checked run: Python 3.13, numpy 2.3, pandas 2.2,
 scikit-learn 1.8.
@@ -21,7 +21,13 @@ from sklearn.metrics import roc_auc_score, average_precision_score
 
 warnings.filterwarnings("ignore")
 PKG = sys.argv[1] if len(sys.argv) > 1 else "."
-OUT = sys.argv[2] if len(sys.argv) > 2 else "followup_outputs"
+if len(sys.argv) < 3:
+    sys.exit("error: out_dir is required.\nusage: python reproduce_followup_v03.py package_dir out_dir")
+OUT = sys.argv[2]
+_protected = {os.path.normcase(os.path.realpath(os.path.join(d, "followup_outputs")))
+              for d in (os.path.dirname(os.path.abspath(__file__)), PKG)}
+if os.path.normcase(os.path.realpath(OUT)) in _protected:
+    sys.exit("error: refusing to write to the committed followup_outputs/ folder; choose another out_dir.")
 os.makedirs(OUT, exist_ok=True)
 CAPS = [0.05, 0.10, 0.20, 0.30]
 N_BOOT = 2000
